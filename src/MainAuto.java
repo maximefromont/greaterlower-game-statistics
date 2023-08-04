@@ -17,17 +17,21 @@ public class MainAuto
     rowhead0.createCell(0).setCellValue("Each cycle had " + GAME_CYCLES + " iterations");
 
     HSSFRow rowhead1 = sheet.createRow((short)1);
-    for(int j = 1; j <= MAXIMUM_ATTEMPT; j++)
+    int i = 1;
+    for(int current_attempt_column = MINIMUM_ATTEMPT; current_attempt_column <= MAXIMUM_ATTEMPT; current_attempt_column+=STEP_ATTEMPT)
     {
-      rowhead1.createCell(j).setCellValue(j);
+      rowhead1.createCell(i).setCellValue(current_attempt_column);
+      i++;
     }
 
-    int column_number = 2;
-    for(int current_maximum_value = STEP_VALUE; current_maximum_value <= MAXIMUM_VALUE; current_maximum_value = current_maximum_value + STEP_VALUE)
+    int row_number = 2;
+    for(int current_maximum_value = STEP_VALUE; current_maximum_value <= MAXIMUM_VALUE; current_maximum_value+= STEP_VALUE)
     {
-      HSSFRow rowhead = sheet.createRow((short)(column_number));
-      column_number++;
-      for(int current_maximum_attempts = 1; current_maximum_attempts <= MAXIMUM_ATTEMPT; current_maximum_attempts++)
+      HSSFRow rowhead = sheet.createRow((short)(row_number));
+      row_number++;
+
+      int column_number = 1;
+      for(int current_maximum_attempts = MINIMUM_ATTEMPT; current_maximum_attempts <= MAXIMUM_ATTEMPT; current_maximum_attempts+=STEP_ATTEMPT)
       {
         int solved_ammount = 0;
         for(int game_cycle = 0; game_cycle < GAME_CYCLES; game_cycle++)
@@ -37,7 +41,8 @@ public class MainAuto
             solved_ammount++;
         }
         rowhead.createCell(0).setCellValue(current_maximum_value);
-        rowhead.createCell(current_maximum_attempts).setCellValue(solved_ammount);
+        rowhead.createCell(column_number).setCellValue(solved_ammount);
+        column_number++;
       }
     }
 
@@ -48,13 +53,15 @@ public class MainAuto
     System.out.println("Excel File has been created successfully.");
   }
 
-  private static final int MAXIMUM_VALUE = 100;
-  private static final int STEP_VALUE = 10;
-  private static final int MAXIMUM_ATTEMPT = 10;
+  private static final int MAXIMUM_VALUE = 1000000;
+  private static final int STEP_VALUE = 1000;
+  private static final int MAXIMUM_ATTEMPT = 20;
+  private static final int MINIMUM_ATTEMPT = 10;
+  private static final int STEP_ATTEMPT = 1;
 
-  private static final int GAME_CYCLES = 1000;
+  private static final int GAME_CYCLES = 100;
 
-  private static boolean resolveGame(int secret_number, int maximum_attempt, int maximum_value)
+  private static boolean resolveGame(int secret_number, int maximum_attempt, int maximum_value, boolean showOutput)
   {
     int guessed_number = -1;
     int attempts = 0;
