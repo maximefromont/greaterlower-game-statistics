@@ -37,7 +37,7 @@ public class MainAuto
         for(int game_cycle = 0; game_cycle < GAME_CYCLES; game_cycle++)
         {
           int secret_number = (int) Math.round(Math.random()*current_maximum_value);
-          if(resolveGame(secret_number, current_maximum_attempts, current_maximum_value))
+          if(resolveGame(secret_number, current_maximum_attempts, current_maximum_value, false))
             solved_ammount++;
         }
         rowhead.createCell(0).setCellValue(current_maximum_value);
@@ -70,11 +70,11 @@ public class MainAuto
     int auto_min = 0;
     int auto_max = maximum_value;
 
-    //System.out.println("The secret number is " + secret_number);
+    if(showOutput) System.out.println("The secret number is " + secret_number);
     while(!won && attempts < maximum_attempt)
     {
       guessed_number = auto_min + ((auto_max-auto_min)/2);
-      //System.out.println("Proposition : " + guessed_number);
+      if(showOutput) System.out.println("Proposition : " + guessed_number);
 
       if(guessed_number > secret_number)
         auto_max = guessed_number;
@@ -86,12 +86,12 @@ public class MainAuto
       attempts++;
     }
 
-    /*
-    if(won)
-      System.out.println("The computer won in " + attempts + " attempts.");
-    else
-      System.out.println("The computer lost.");
-     */
+    if(showOutput) {
+      if(won)
+        System.out.println("The computer won in " + attempts + " attempts.");
+      else
+        System.out.println("The computer lost.");
+    }
 
     return won;
   }
