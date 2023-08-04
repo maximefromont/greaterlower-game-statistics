@@ -23,21 +23,21 @@ public class MainAuto
     }
 
     int column_number = 2;
-    for(int maximum_value = STEP_VALUE; maximum_value <= MAXIMUM_VALUE; maximum_value = maximum_value + STEP_VALUE)
+    for(int current_maximum_value = STEP_VALUE; current_maximum_value <= MAXIMUM_VALUE; current_maximum_value = current_maximum_value + STEP_VALUE)
     {
       HSSFRow rowhead = sheet.createRow((short)(column_number));
       column_number++;
-      for(int attempts = 1; attempts <= MAXIMUM_ATTEMPT; attempts++)
+      for(int current_maximum_attempts = 1; current_maximum_attempts <= MAXIMUM_ATTEMPT; current_maximum_attempts++)
       {
         int solved_ammount = 0;
         for(int game_cycle = 0; game_cycle < GAME_CYCLES; game_cycle++)
         {
-          int secret_number = (int) Math.round(Math.random()*MAXIMUM_VALUE);
-          if(resolveGame(secret_number))
+          int secret_number = (int) Math.round(Math.random()*current_maximum_value);
+          if(resolveGame(secret_number, current_maximum_attempts, current_maximum_value))
             solved_ammount++;
         }
-        rowhead.createCell(0).setCellValue(maximum_value);
-        rowhead.createCell(attempts).setCellValue(solved_ammount);
+        rowhead.createCell(0).setCellValue(current_maximum_value);
+        rowhead.createCell(current_maximum_attempts).setCellValue(solved_ammount);
       }
     }
 
@@ -48,23 +48,23 @@ public class MainAuto
     System.out.println("Excel File has been created successfully.");
   }
 
-  private static final int MAXIMUM_VALUE = 50000;
-  private static final int STEP_VALUE = 100;
+  private static final int MAXIMUM_VALUE = 100;
+  private static final int STEP_VALUE = 10;
   private static final int MAXIMUM_ATTEMPT = 10;
 
-  private static final int GAME_CYCLES = 100;
+  private static final int GAME_CYCLES = 1000;
 
-  private static boolean resolveGame(int secret_number)
+  private static boolean resolveGame(int secret_number, int maximum_attempt, int maximum_value)
   {
     int guessed_number = -1;
     int attempts = 0;
     boolean won = false;
 
     int auto_min = 0;
-    int auto_max = MAXIMUM_VALUE;
+    int auto_max = maximum_value;
 
     //System.out.println("The secret number is " + secret_number);
-    while(!won && attempts < MAXIMUM_ATTEMPT)
+    while(!won && attempts < maximum_attempt)
     {
       guessed_number = auto_min + ((auto_max-auto_min)/2);
       //System.out.println("Proposition : " + guessed_number);
