@@ -2,6 +2,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 
+import com.sun.javafx.scene.traversal.SubSceneTraversalEngine;
 import org.apache.poi.hssf.usermodel.*;
 
 public class MainAuto
@@ -37,7 +38,7 @@ public class MainAuto
         for(int game_cycle = 0; game_cycle < GAME_CYCLES; game_cycle++)
         {
           int secret_number = (int) Math.round(Math.random()*current_maximum_value);
-          if(resolveGame(secret_number, current_maximum_attempts, current_maximum_value, false))
+          if(resolveGame(secret_number, current_maximum_attempts, STEP_VALUE, current_maximum_value, false))
             solved_ammount++;
         }
         rowhead.createCell(0).setCellValue(current_maximum_value);
@@ -61,16 +62,15 @@ public class MainAuto
 
   private static final int GAME_CYCLES = 100;
 
-  private static boolean resolveGame(int secret_number, int maximum_attempt, int maximum_value, boolean showOutput)
+  public static boolean resolveGame(int secret_number, int maximum_attempt, int minimum_value, int maximum_value, boolean showOutput)
   {
     int guessed_number = -1;
     int attempts = 0;
     boolean won = false;
 
-    int auto_min = 0;
+    int auto_min = minimum_value;
     int auto_max = maximum_value;
 
-    if(showOutput) System.out.println("The secret number is " + secret_number);
     while(!won && attempts < maximum_attempt)
     {
       guessed_number = auto_min + ((auto_max-auto_min)/2);
@@ -86,11 +86,17 @@ public class MainAuto
       attempts++;
     }
 
-    if(showOutput) {
+    if(showOutput)
+    {
       if(won)
         System.out.println("The computer won in " + attempts + " attempts.");
       else
-        System.out.println("The computer lost.");
+        System.out.println("The computer used his "+ attempts + " attempts and lost.");
+
+      System.out.println("The ammounts of possible answers is " + (maximum_value-minimum_value) + ".");
+      System.out.println("The last guessed answer was " + guessed_number + ". And the secret number was " + secret_number + ".");
+      Double separation_percantage = (Math.abs((double) guessed_number - (double) secret_number)*100.0d)/( (double) maximum_value- (double) minimum_value);
+      System.out.println("The separation percentage is " + String.format("%.5f", separation_percantage) + "%.");
     }
 
     return won;
